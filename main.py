@@ -7,6 +7,12 @@ from enum import Enum
 app = FastAPI()
 
 
+class ModelName(str, Enum):
+    alexnet = "alexnet"
+    resnet = "resnet"
+    lenet = "lenet"
+
+
 class Item(BaseModel):
     name: str
     price: float
@@ -28,4 +34,12 @@ def update_item(item_id: int, item: Item):
     return {"item_name": item.name, "item_id": item_id}
 
 
+@app.get("/models/{model_name}")
+async def get_model(model_name: ModelName):
+    if model_name is ModelName.alexnet:
+        return {"model_name": model_name, "message": "Deep Learning FTW!"}
 
+    if model_name.value == "lenet":
+        return {"model_name": model_name, "message": "LeCNN all the images"}
+
+    return {"model_name": model_name, "message": "Have some residuals"}
